@@ -79,7 +79,7 @@ export default function ManageCreateCoursePage() {
             href="#"
             className="w-fit rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap"
           >
-            Import from BWA
+            Import from LMS
           </a>
         </div>
       </header>
