@@ -16,8 +16,8 @@
   ],
   "license": "ISC",
   "author": "Muhammad Bintang Nugraha",
-  "type": "commonjs",
-  "main": "module",
+  "type": "module",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js"
