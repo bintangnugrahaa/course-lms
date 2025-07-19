@@ -1,39 +1,27 @@
 {
-  "name": "backend",
+  "name": "be-lms",
   "version": "1.0.0",
-  "description": "Full-Stack JavaScript MERN: Web Course LMS",
-  "keywords": [
-    "MERN",
-    "LMS",
-    "Full-Stack",
-    "Node.js",
-    "Express",
-    "MongoDB",
-    "Backend",
-    "JavaScript",
-    "REST API",
-    "Learning Management System"
-  ],
-  "license": "ISC",
-  "author": "Muhammad Bintang Nugraha",
-  "type": "module",
+  "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js"
   },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "body-parser": "^2.2.0",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.0",
-    "express": "^5.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.4",
-    "multer": "^2.0.1",
-    "zod": "^4.0.5"
+    "mongoose": "^8.5.2",
+    "multer": "^1.4.5-lts.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.4"
   }
 }

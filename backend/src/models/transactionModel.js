@@ -1,24 +1,21 @@
 import mongoose from "mongoose";
 
-const transactionModel = new mongoose.Schema(
-  {
+const transactionModel = new mongoose.Schema({
     user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
     price: {
-      type: Number,
-      required: true,
+        type: Number,
+        required: true,
     },
     status: {
-      type: String,
-      enum: ["pending", "success", "failed"],
-      default: "pending",
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
+        type: String,
+        enum: ['pending', 'success', 'failed'],
+        default: 'pending'
+    }
+}, {
+    timestamps: true
+})
 
-export default mongoose.model("Transaction", transactionModel);
+export default mongoose.model('Transaction', transactionModel)
