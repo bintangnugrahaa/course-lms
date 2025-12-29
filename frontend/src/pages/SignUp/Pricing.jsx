@@ -162,7 +162,7 @@ export default function Pricing() {
                 </span>
               </div>
             </Link>
-            <Link to="#">
+            <Link to="https://api.whatsapp.com/send/?phone=6285155344998&text=Halo%20ShaynaLMS%20Team,%20saya%20ingin%20konsultasi%20tentang%20pilihan%20plan%20dan%20harga.%20Bisa%20dibantu%20memilih%20yang%20tepat%20untuk%20kebutuhan%20bisnis%20saya%3F">
               <div className="flex items-center justify-center gap-3 w-full rounded-full border p-[14px_20px] transition-all duration-300 hover:bg-[#662FFF] hover:border-[#8661EE] hover:shadow-[-10px_-6px_10px_0_#7F33FF_inset] bg-[#070B24] border-[#24283E] shadow-[-10px_-6px_10px_0_#181A35_inset]">
                 <span className="font-semibold text-white">
                   Contact Our Sales
