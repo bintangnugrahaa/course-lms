@@ -3,6 +3,7 @@ import ManagerHome from "../pages/ManagerHome/Index";
 import SignInPage from "../pages/SignIn/Index";
 import SignUpPage from "../pages/SignUp/Index";
 import SuccessCheckoutPage from "../pages/SuccessCheckout/Index";
+import LayoutDashboard from "../components/Layout";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,16 @@ const router = createBrowserRouter([
   {
     path: "/success-checkout",
     element: <SuccessCheckoutPage />
+  },
+  {
+    path: "/manager",
+    element: <LayoutDashboard />,
+    children: [
+      {
+        index: true,
+        element: <ManagerHome />
+      }
+    ]
   }
 ])
 
