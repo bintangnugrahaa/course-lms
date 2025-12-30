@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "36",
+    "@ckeditor/ckeditor5-react": "5",
     "axios": "^1.13.2",
     "prop-types": "^15.8.1",
     "react": "^19.2.0",
