@@ -22,7 +22,7 @@ export default function ManageCoursePage() {
             Import File
           </Link>
           <Link
-            to="#"
+            to="/manager/courses/create"
             className="w-fit rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap"
           >
             New Course

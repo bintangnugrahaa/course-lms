@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import ManagerHomePage from "../pages/manager/Home/Index";
-import SignInPage from "../pages/SignIn/Index";
-import SignUpPage from "../pages/SignUp/Index";
-import SuccessCheckoutPage from "../pages/SuccessCheckout/Index";
+import SignInPage from "../pages/sign-in/Index";
+import SignUpPage from "../pages/sign-up/Index";
+import SuccessCheckoutPage from "../pages/success-checkout/Index";
 import LayoutDashboard from "../components/Layout";
 import ManageCoursePage from "../pages/manager/courses/Index";
+import ManageCreateCoursePage from "../pages/manager/create-courses/Index";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/manager/courses",
         element: <ManageCoursePage />
+      },
+      {
+        path: "/manager/courses/create",
+        element: <ManageCreateCoursePage />
       }
     ]
   }
