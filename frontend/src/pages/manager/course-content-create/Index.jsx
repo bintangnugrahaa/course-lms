@@ -39,7 +39,7 @@ export default function ManageContentCreatePage() {
         </div>
       </header>
       <form
-        action="manage-course-materi.html"
+        action="#"
         className="flex flex-col w-[930px] rounded-[30px] p-[30px] gap-[30px] bg-[#F8FAFB]"
       >
         <div className="flex flex-col gap-[10px]">

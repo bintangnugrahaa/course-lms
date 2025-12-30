@@ -1,16 +1,24 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useMatch } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 
 export default function LayoutDashboard() {
+  const isPreviewPage = useMatch("/manager/courses/:id/preview")
+
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main className="flex flex-col flex-1 gap-[30px] p-[30px] ml-[290px]">
-        <Header />
+    <>
+      {isPreviewPage !== null ? (
         <Outlet />
-      </main>
-    </div>
+      ) : (
+        <div className="flex min-h-screen">
+          <Sidebar />
+          <main className="flex flex-col flex-1 gap-[30px] p-[30px] ml-[290px]">
+            <Header />
+            <Outlet />
+          </main>
+        </div>
+      )}
+    </>
   )
 }
