@@ -23,7 +23,7 @@ export default function Header() {
       </form>
       <div className="relative flex items-center justify-end gap-[14px] group">
         <div className="text-right">
-          <p className="font-semibold">Kim Jenie</p>
+          <p className="font-semibold">Kim Jennie</p>
           <p className="text-sm leading-[21px] text-[#838C9D]">Manager</p>
         </div>
         <button
