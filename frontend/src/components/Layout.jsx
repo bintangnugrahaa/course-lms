@@ -3,8 +3,8 @@ import { Outlet, useMatch } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 
-export default function LayoutDashboard() {
-  const isPreviewPage = useMatch("/manager/courses/:id/preview")
+export default function LayoutDashboard({ isAdmin = true }) {
+  const isPreviewPage = useMatch("/manager/courses/:id/preview");
 
   return (
     <>
@@ -12,7 +12,7 @@ export default function LayoutDashboard() {
         <Outlet />
       ) : (
         <div className="flex min-h-screen">
-          <Sidebar />
+          <Sidebar isAdmin={isAdmin} />
           <main className="flex flex-col flex-1 gap-[30px] p-[30px] ml-[290px]">
             <Header />
             <Outlet />
