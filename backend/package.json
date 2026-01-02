@@ -1,0 +1,44 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend service for Learning Management System (LMS).",
+  "keywords": [
+    "lms",
+    "fullstack",
+    "backend",
+    "express",
+    "mongodb",
+    "jwt",
+    "api"
+  ],
+  "homepage": "https://github.com/bintangnugrahaa/course-lms#readme",
+  "bugs": {
+    "url": "https://github.com/bintangnugrahaa/course-lms/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bintangnugrahaa/course-lms.git"
+  },
+  "license": "ISC",
+  "author": "Muhammad Bintang Nugraha",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"No tests specified\"",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.1",
+    "multer": "^2.0.2",
+    "zod": "^4.3.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
