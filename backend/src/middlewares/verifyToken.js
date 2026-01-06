@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import userModel from "../models/userModel";
+import userModel from "../models/userModel.js";
 
 export const verifyToken = async (req, res, next) => {
   const secretKey = process.env.JWT_SECRET_KEY ?? "";
