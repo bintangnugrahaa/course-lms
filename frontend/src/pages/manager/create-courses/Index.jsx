@@ -1,7 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 
 export default function ManageCreateCoursePage() {
+  const categories = useLoaderData();
+
+  console.log(categories);
+
   return (
     <>
       <header className="flex items-center justify-between gap-[30px]">
@@ -56,7 +60,7 @@ export default function ManageCreateCoursePage() {
               type="button"
               id="trigger-input"
               className="absolute top-0 left-0 w-full h-full flex justify-center items-center gap-3 z-0"
-              onclick="document.getElementById('thumbnail').click()"
+              onClick={() => document.getElementById("thumbnail").click()}
             >
               <img
                 src="/assets/images/icons/gallery-add-black.svg"
@@ -67,7 +71,7 @@ export default function ManageCreateCoursePage() {
             </button>
             <img
               id="thumbnail-preview"
-              src=""
+              src={null}
               className="w-full h-full object-cover hidden"
               alt="thumbnail"
             />
@@ -122,12 +126,14 @@ export default function ManageCreateCoursePage() {
               id="category"
               className="appearance-none outline-none w-full py-3 px-2 -mx-2 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent"
             >
-              <option value="" hidden="">
+              <option value="" hidden>
                 Choose one category
               </option>
-              <option value="">test</option>
-              <option value="">test</option>
-              <option value="">test</option>
+              {categories?.data?.map((item) => (
+                <option key={item._id} value={item._id}>
+                  {item.name}
+                </option>
+              ))}
             </select>
             <img
               src="/assets/images/icons/arrow-down.svg"
@@ -175,5 +181,5 @@ export default function ManageCreateCoursePage() {
         </div>
       </form>
     </>
-  )
+  );
 }
