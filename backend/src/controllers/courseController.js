@@ -3,6 +3,7 @@ import fs from "fs";
 import { mutateCourseSchema } from "../utils/schema.js";
 import categoryModel from "../models/categoryModel.js";
 import userModel from "../models/userModel.js";
+import path from "path";
 
 export const getCourses = async (req, res) => {
   try {
@@ -13,7 +14,7 @@ export const getCourses = async (req, res) => {
       .select("name thumbnail")
       .populate({
         path: "category",
-        select: "name _id",
+        select: "name -_id",
       })
       .populate({
         path: "students",
@@ -51,8 +52,8 @@ export const postCourse = async (req, res) => {
     if (!parse.success) {
       const errorMessages = parse.error.issues.map((err) => err.message);
 
-      if (req.file?.path && fs.existsSync(req.file?.path)) {
-        fs.unlinkSync(req.file?.path);
+      if (req?.file?.path && fs.existsSync(req?.file?.path)) {
+        fs.unlinkSync(req?.file?.path);
       }
 
       return res.status(500).json({
@@ -120,8 +121,8 @@ export const updateCourse = async (req, res) => {
     if (!parse.success) {
       const errorMessages = parse.error.issues.map((err) => err.message);
 
-      if (req.file?.path && fs.existsSync(req.file?.path)) {
-        fs.unlinkSync(req.file?.path);
+      if (req?.file?.path && fs.existsSync(req?.file?.path)) {
+        fs.unlinkSync(req?.file?.path);
       }
 
       return res.status(500).json({
@@ -145,11 +146,42 @@ export const updateCourse = async (req, res) => {
       category: category._id,
       description: parse.data.description,
       tagline: parse.data.tagline,
-      thumbnail: req.file ? req.file?.filename : oldCourse.thumbnail,
+      thumbnail: req?.file ? req.file?.filename : oldCourse.thumbnail,
       manager: req.user._id,
     });
 
     return res.json({ message: "Update Course Success" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const deleteCourse = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const course = await courseModel.findById(id);
+
+    const dirname = path.resolve();
+
+    const filePath = path.join(
+      dirname,
+      "public/uploads/courses",
+      course.thumbnail
+    );
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    await courseModel.findByIdAndDelete(id);
+
+    return res.json({
+      message: "Delete course success",
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
