@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import ManagerHomePage from "../pages/manager/Home/Index";
 import SignInPage from "../pages/sign-in/Index";
 import SignUpPage from "../pages/sign-up/Index";
@@ -12,57 +12,69 @@ import ManageCoursePreviewPage from "../pages/manager/course-preview/Index";
 import ManageStudensPage from "../pages/manager/students/Index";
 import { element } from "prop-types";
 import StudentPage from "../pages/student/student-overview/Index";
+import { MANAGER_SESSION, STORAGE_KEY } from "../utils/const";
+import secureLocalStorage from "react-secure-storage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ManagerHomePage />
+    element: <ManagerHomePage />,
   },
   {
     path: "/manager/sign-in",
-    element: <SignInPage />
+    element: <SignInPage />,
   },
   {
     path: "/manager/sign-up",
-    element: <SignUpPage />
+    element: <SignUpPage />,
   },
   {
     path: "/success-checkout",
-    element: <SuccessCheckoutPage />
+    element: <SuccessCheckoutPage />,
   },
   {
     path: "/manager",
+    id: MANAGER_SESSION,
+    loader: async () => {
+      const session = secureLocalStorage.getItem(STORAGE_KEY);
+
+      if (!session || session.role !== "manager") {
+        throw redirect("/manager/sign-in");
+      }
+
+      return session;
+    },
     element: <LayoutDashboard />,
     children: [
       {
         index: true,
-        element: <ManagerHomePage />
+        element: <ManagerHomePage />,
       },
       {
         path: "/manager/courses",
-        element: <ManageCoursePage />
+        element: <ManageCoursePage />,
       },
       {
         path: "/manager/courses/create",
-        element: <ManageCreateCoursePage />
+        element: <ManageCreateCoursePage />,
       },
       {
         path: "/manager/courses/:id",
-        element: <ManageCourseDetailPage />
+        element: <ManageCourseDetailPage />,
       },
       {
         path: "/manager/courses/:id/create",
-        element: <ManageContentCreatePage />
+        element: <ManageContentCreatePage />,
       },
       {
         path: "/manager/courses/:id/preview",
-        element: <ManageCoursePreviewPage />
+        element: <ManageCoursePreviewPage />,
       },
       {
         path: "/manager/students",
-        element: <ManageStudensPage />
-      }
-    ]
+        element: <ManageStudensPage />,
+      },
+    ],
   },
   {
     path: "/student",
@@ -70,14 +82,14 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <StudentPage />
+        element: <StudentPage />,
       },
       {
         path: "/student/detail-course/:id",
-        element:<ManageCoursePreviewPage />
-      }
-    ]
-  }
-])
+        element: <ManageCoursePreviewPage />,
+      },
+    ],
+  },
+]);
 
-export default router
+export default router;
