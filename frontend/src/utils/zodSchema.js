@@ -31,3 +31,7 @@ export const createCourseSchema = z.object({
       message: "File size exceeds 2MB.",
     }),
 });
+
+export const updateCourseSchema = createCourseSchema.partial({
+  thumbnail: true,
+});
