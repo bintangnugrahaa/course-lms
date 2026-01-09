@@ -5,8 +5,6 @@ import CardCourse from "./Card";
 export default function ManageCoursePage() {
   const courses = useLoaderData();
 
-  console.log(courses);
-
   return (
     <>
       <header className="flex items-center justify-between gap-[30px]">

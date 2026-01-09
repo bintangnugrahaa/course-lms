@@ -1,10 +1,49 @@
-import React from "react";
-import { Link, useLoaderData } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import { createCourseSchema } from "../../../utils/zodSchema";
+import { useMutation } from "react-query";
+import { createCourse } from "../../../services/courseService";
 
 export default function ManageCreateCoursePage() {
   const categories = useLoaderData();
 
-  console.log(categories);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({ resolver: zodResolver(createCourseSchema) });
+
+  const [file, setFile] = useState(null);
+  const inputFileRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  const { isLoading, mutateAsync } = useMutation({
+    mutationFn: (data) => createCourse(data),
+  });
+
+  const onSubmit = async (data) => {
+    console.log(data);
+
+    try {
+      const formData = new FormData();
+
+      formData.append("name", data.name);
+      formData.append("thumbnail", file);
+      formData.append("tagline", data.tagline);
+      formData.append("categoryId", data.categoryId);
+      formData.append("description", data.description);
+
+      await mutateAsync(formData);
+
+      navigate("/manager/courses");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -25,7 +64,7 @@ export default function ManageCreateCoursePage() {
         </div>
       </header>
       <form
-        action="#"
+        onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-[550px] rounded-[30px] p-[30px] gap-[30px] bg-[#F8FAFB]"
       >
         <div className="flex flex-col gap-[10px]">
@@ -39,14 +78,16 @@ export default function ManageCreateCoursePage() {
               alt="icon"
             />
             <input
+              {...register("name")}
               type="text"
-              name="title"
               id="title"
               className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent"
               placeholder="Write better name for your course"
-              required=""
             />
           </div>
+          <span className="error-message text-[#FF435A]">
+            {errors.name?.message}
+          </span>
         </div>
         <div className="relative flex flex-col gap-[10px]">
           <label htmlFor="thumbnail" className="font-semibold">
@@ -59,8 +100,8 @@ export default function ManageCreateCoursePage() {
             <button
               type="button"
               id="trigger-input"
+              onClick={() => inputFileRef.current.click()}
               className="absolute top-0 left-0 w-full h-full flex justify-center items-center gap-3 z-0"
-              onClick={() => document.getElementById("thumbnail").click()}
             >
               <img
                 src="/assets/images/icons/gallery-add-black.svg"
@@ -69,12 +110,14 @@ export default function ManageCreateCoursePage() {
               />
               <span className="text-[#838C9D]">Add an attachment</span>
             </button>
-            <img
-              id="thumbnail-preview"
-              src={null}
-              className="w-full h-full object-cover hidden"
-              alt="thumbnail"
-            />
+            {file && (
+              <img
+                id="thumbnail-preview"
+                src={URL.createObjectURL(file)}
+                className="w-full h-full object-cover"
+                alt="thumbnail"
+              />
+            )}
             <button
               type="button"
               id="delete-preview"
@@ -84,14 +127,24 @@ export default function ManageCreateCoursePage() {
             </button>
           </div>
           <input
+            {...register("thumbnail")}
+            ref={inputFileRef}
             type="file"
-            name="thumbnail"
+            onChange={(e) => {
+              if (e.target.files) {
+                setFile(e.target.files[0]);
+                setValue("thumbnail", e.target.files[0]);
+              }
+            }}
             id="thumbnail"
             accept="image/*"
             className="absolute bottom-0 left-1/4 -z-10"
             required=""
           />
         </div>
+        <span className="error-message text-[#FF435A]">
+          {errors.thumbnail?.message}
+        </span>
         <div className="flex flex-col gap-[10px]">
           <label htmlFor="tagline" className="font-semibold">
             Course Tagline
@@ -103,13 +156,16 @@ export default function ManageCreateCoursePage() {
               alt="icon"
             />
             <input
+              {...register("tagline")}
               type="text"
-              name="tagline"
               id="tagline"
               className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent"
               placeholder="Write tagline for better copy"
             />
           </div>
+          <span className="error-message text-[#FF435A]">
+            {errors.tagline?.message}
+          </span>
         </div>
         <div className="flex flex-col gap-[10px]">
           <label htmlFor="category" className="font-semibold">
@@ -122,7 +178,7 @@ export default function ManageCreateCoursePage() {
               alt="icon"
             />
             <select
-              name="category"
+              {...register("categoryId")}
               id="category"
               className="appearance-none outline-none w-full py-3 px-2 -mx-2 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent"
             >
@@ -141,19 +197,22 @@ export default function ManageCreateCoursePage() {
               alt="icon"
             />
           </div>
+          <span className="error-message text-[#FF435A]">
+            {errors?.categoryId?.message}
+          </span>
         </div>
         <div className="flex flex-col gap-[10px]">
           <label htmlFor="desc" className="font-semibold">
             Description
           </label>
-          <div className="flex w-full rounded-[20px] border border-[#CFDBEF] gap-3 p-5  transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF] ring-2 ring-[#FF435A]">
+          <div className="flex w-full rounded-[20px] border border-[#CFDBEF] gap-3 p-5  transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
             <img
               src="/assets/images/icons/note-black.png"
               className="w-6 h-6"
               alt="icon"
             />
             <textarea
-              name="desc"
+              {...register("description")}
               id="desc"
               rows={5}
               className="appearance-none outline-none w-full font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent"
@@ -162,18 +221,19 @@ export default function ManageCreateCoursePage() {
             />
           </div>
           <span className="error-message text-[#FF435A]">
-            The description is required
+            {errors.description?.message}
           </span>
         </div>
         <div className="flex items-center gap-[14px]">
           <button
-            type="submit"
+            type="button"
             className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap"
           >
             Save as Draft
           </button>
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap"
           >
             Create Now
