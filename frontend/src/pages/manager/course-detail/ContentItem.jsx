@@ -2,13 +2,13 @@ import React from "react";
 import Proptypes from "prop-types";
 import { Link } from "react-router-dom";
 
-export default function ContentItem(
+export default function ContentItem({
   id = "1",
   index = 1,
   type = "video",
   title = "Install VSCode di Windows",
-  courseId = "2"
-) {
+  courseId = "2",
+}) {
   return (
     <div className="card flex items-center gap-5">
       <div className="relative flex shrink-0 w-[140px] h-[110px] ">
