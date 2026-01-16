@@ -30,11 +30,15 @@ export default function ContentItem({
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-[6px] mt-[6px]">
             <img
-              src="/assets/images/icons/note-favorite-purple.svg"
+              src={`/assets/images/icons/${
+                type === "text"
+                  ? "note-favorite-purple.svg"
+                  : "video-play-purple.svg"
+              }`}
               className="w-5 h-5"
               alt="icon"
             />
-            <p className="text-[#838C9D]">Video Content</p>
+            <p className="text-[#838C9D]">{type} Content</p>
           </div>
         </div>
       </div>

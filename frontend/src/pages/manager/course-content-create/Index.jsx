@@ -5,10 +5,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { mutateContentSchema } from "../../../utils/zodSchema";
 import { useMutation } from "react-query";
-import { createContent } from "../../../services/courseService";
-import { useNavigate, useParams } from "react-router-dom";
+import { createContent, updateContent } from "../../../services/courseService";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 
 export default function ManageContentCreatePage() {
+  const content = useLoaderData();
+  const { id, contentId } = useParams();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -17,23 +21,37 @@ export default function ManageContentCreatePage() {
     watch,
   } = useForm({
     resolver: zodResolver(mutateContentSchema),
+    defaultValues: {
+      title: content?.title,
+      type: content?.type,
+      youtubeId: content?.youtubeId,
+      text: content?.text,
+    },
   });
 
-  const { isLoading, mutateAsync } = useMutation({
+  const mutateCreate = useMutation({
     mutationFn: (data) => createContent(data),
   });
 
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const mutateUpdate = useMutation({
+    mutationFn: (data) => updateContent(data, contentId),
+  });
 
   const type = watch("type");
 
   const onSubmit = async (values) => {
     try {
-      await mutateAsync({
-        ...values,
-        courseId: id,
-      });
+      if (content === undefined) {
+        await mutateCreate.mutateAsync({
+          ...values,
+          courseId: id,
+        });
+      } else {
+        await mutateUpdate.mutateAsync({
+          ...values,
+          courseId: id,
+        });
+      }
 
       navigate(`/manager/courses/${id}`);
     } catch (error) {
@@ -54,7 +72,7 @@ export default function ManageContentCreatePage() {
           Course
         </span>
         <span className="last-of-type:after:content-[''] last-of-type:font-semibold">
-          Add Content
+          {content === undefined ? "Add" : "Edit"} Content
         </span>
       </div>
       <header className="flex items-center justify-between gap-[30px]">
@@ -68,7 +86,7 @@ export default function ManageContentCreatePage() {
           </div>
           <div>
             <h1 className="font-extrabold text-[28px] leading-[42px]">
-              Add Content
+              {content === undefined ? "Add" : "Edit"} Content
             </h1>
             <p className="text-[#838C9D] mt-[1]">
               Give a best content for the course
@@ -180,10 +198,14 @@ export default function ManageContentCreatePage() {
           </button>
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={
+              content === undefined
+                ? mutateCreate.isLoading
+                : mutateUpdate.isLoading
+            }
             className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap"
           >
-            Add Content Now
+            {content === undefined ? "Add" : "Edit"} Content Now
           </button>
         </div>
       </form>
