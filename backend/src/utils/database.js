@@ -1,22 +1,19 @@
 import mongoose from "mongoose";
 
-export default function connectDB() {
+export default async function connectDB() {
   const DATABASE_URL = process.env.DATABASE_URL ?? "";
 
-  try {
-    mongoose.connect(DATABASE_URL);
-  } catch (error) {
-    console.log(error);
+  if (!DATABASE_URL) {
     process.exit(1);
   }
 
-  const dbConn = mongoose.connection;
+  try {
+    await mongoose.connect(DATABASE_URL);
+  } catch {
+    process.exit(1);
+  }
 
-  dbConn.once("open", () => {
-    console.log(`Database Connected: ${DATABASE_URL}`);
-  });
-
-  dbConn.on("error", (err) => {
-    console.error(`Connection Error: ${err}`);
+  mongoose.connection.on("error", () => {
+    process.exit(1);
   });
 }

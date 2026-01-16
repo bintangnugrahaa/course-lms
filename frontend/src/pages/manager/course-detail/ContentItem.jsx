@@ -3,6 +3,7 @@ import Proptypes from "prop-types";
 import { Link, useRevalidator } from "react-router-dom";
 import { useMutation } from "react-query";
 import { deleteDetailContent } from "../../../services/courseService";
+import { toast } from "react-toastify";
 
 export default function ContentItem({
   id = "1",
@@ -16,16 +17,18 @@ export default function ContentItem({
 
   const { isLoading, mutateAsync } = useMutation({
     mutationFn: () => deleteDetailContent(id),
+    onSuccess: () => {
+      toast.success("Content berhasil dihapus");
+      setShowConfirm(false);
+      revalidator.revalidate();
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Gagal menghapus content");
+    },
   });
 
   const handleDelete = async () => {
-    try {
-      await mutateAsync();
-      setShowConfirm(false);
-      revalidator.revalidate();
-    } catch (error) {
-      console.log(error);
-    }
+    await mutateAsync();
   };
 
   return (

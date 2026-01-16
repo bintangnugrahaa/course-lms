@@ -7,6 +7,7 @@ import { mutateContentSchema } from "../../../utils/zodSchema";
 import { useMutation } from "react-query";
 import { createContent, updateContent } from "../../../services/courseService";
 import { useLoaderData, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function ManageContentCreatePage() {
   const content = useLoaderData();
@@ -31,32 +32,44 @@ export default function ManageContentCreatePage() {
 
   const mutateCreate = useMutation({
     mutationFn: (data) => createContent(data),
+    onSuccess: () => {
+      toast.success("Content berhasil ditambahkan");
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Gagal menambahkan content"
+      );
+    },
   });
 
   const mutateUpdate = useMutation({
     mutationFn: (data) => updateContent(data, contentId),
+    onSuccess: () => {
+      toast.success("Content berhasil diperbarui");
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Gagal memperbarui content"
+      );
+    },
   });
 
   const type = watch("type");
 
   const onSubmit = async (values) => {
-    try {
-      if (content === undefined) {
-        await mutateCreate.mutateAsync({
-          ...values,
-          courseId: id,
-        });
-      } else {
-        await mutateUpdate.mutateAsync({
-          ...values,
-          courseId: id,
-        });
-      }
-
-      navigate(`/manager/courses/${id}`);
-    } catch (error) {
-      console.log(error);
+    if (content === undefined) {
+      await mutateCreate.mutateAsync({
+        ...values,
+        courseId: id,
+      });
+    } else {
+      await mutateUpdate.mutateAsync({
+        ...values,
+        courseId: id,
+      });
     }
+
+    navigate(`/manager/courses/${id}`);
   };
 
   return (
@@ -75,6 +88,7 @@ export default function ManageContentCreatePage() {
           {content === undefined ? "Add" : "Edit"} Content
         </span>
       </div>
+
       <header className="flex items-center justify-between gap-[30px]">
         <div className="flex items-center gap-[30px]">
           <div className="flex shrink-0 w-[150px] h-[100px] rounded-[20px] overflow-hidden bg-[#D9D9D9]">
@@ -94,6 +108,7 @@ export default function ManageContentCreatePage() {
           </div>
         </div>
       </header>
+
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-[930px] rounded-[30px] p-[30px] gap-[30px] bg-[#F8FAFB]"
@@ -116,10 +131,9 @@ export default function ManageContentCreatePage() {
               placeholder="Write better name for your course"
             />
           </div>
-          <span className="error-message text-[#FF435A]">
-            {errors.title?.message}
-          </span>
+          <span className="text-[#FF435A]">{errors.title?.message}</span>
         </div>
+
         <div className="flex flex-col gap-[10px]">
           <label htmlFor="type" className="font-semibold">
             Select Type
@@ -133,7 +147,7 @@ export default function ManageContentCreatePage() {
             <select
               {...register("type")}
               id="type"
-              className="appearance-none outline-none w-full py-3 px-2 -mx-2 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent"
+              className="appearance-none outline-none w-full py-3 px-2 -mx-2 font-semibold !bg-transparent"
             >
               <option value="" hidden>
                 Choose content type
@@ -147,10 +161,9 @@ export default function ManageContentCreatePage() {
               alt="icon"
             />
           </div>
-          <span className="error-message text-[#FF435A]">
-            {errors.type?.message}
-          </span>
+          <span className="text-[#FF435A]">{errors.type?.message}</span>
         </div>
+
         {type === "video" && (
           <div className="flex flex-col gap-[10px]">
             <label htmlFor="video" className="font-semibold">
@@ -166,15 +179,14 @@ export default function ManageContentCreatePage() {
                 {...register("youtubeId")}
                 type="text"
                 id="video"
-                className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent"
-                placeholder="Write tagline for better copy"
+                className="appearance-none outline-none w-full py-3 font-semibold !bg-transparent"
+                placeholder="Youtube video ID"
               />
             </div>
-            <span className="error-message text-[#FF435A]">
-              {errors.youtubeId?.message}
-            </span>
+            <span className="text-[#FF435A]">{errors.youtubeId?.message}</span>
           </div>
         )}
+
         {type === "text" && (
           <div className="flex flex-col gap-[10px]">
             <label className="font-semibold">Content Text</label>
@@ -185,15 +197,14 @@ export default function ManageContentCreatePage() {
                 setValue("text", editor.getData(), { shouldValidate: true });
               }}
             />
-            <span className="error-message text-[#FF435A]">
-              {errors.text?.message}
-            </span>
+            <span className="text-[#FF435A]">{errors.text?.message}</span>
           </div>
         )}
+
         <div className="flex items-center gap-[14px]">
           <button
             type="button"
-            className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap"
+            className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold"
           >
             Save as Draft
           </button>
@@ -204,7 +215,7 @@ export default function ManageContentCreatePage() {
                 ? mutateCreate.isLoading
                 : mutateUpdate.isLoading
             }
-            className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap"
+            className="w-full rounded-full p-[14px_20px] font-semibold text-white bg-[#662FFF]"
           >
             {content === undefined ? "Add" : "Edit"} Content Now
           </button>

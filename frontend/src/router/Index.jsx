@@ -10,7 +10,6 @@ import ManageCourseDetailPage from "../pages/manager/course-detail/Index";
 import ManageContentCreatePage from "../pages/manager/course-content-create/Index";
 import ManageCoursePreviewPage from "../pages/manager/course-preview/Index";
 import ManageStudensPage from "../pages/manager/students/Index";
-import { element } from "prop-types";
 import StudentPage from "../pages/student/student-overview/Index";
 import { MANAGER_SESSION, STORAGE_KEY } from "../utils/const";
 import secureLocalStorage from "react-secure-storage";
@@ -20,6 +19,7 @@ import {
   getCourses,
   getDetailContent,
 } from "../services/courseService";
+import { toast } from "react-toastify";
 
 const router = createBrowserRouter([
   {
@@ -59,39 +59,60 @@ const router = createBrowserRouter([
       {
         path: "/manager/courses",
         loader: async () => {
-          const data = await getCourses();
-
-          console.log(data);
-
-          return data;
+          try {
+            return await getCourses();
+          } catch (error) {
+            toast.error(
+              error?.response?.data?.message || "Gagal memuat daftar course"
+            );
+            return [];
+          }
         },
         element: <ManageCoursePage />,
       },
       {
         path: "/manager/courses/create",
         loader: async () => {
-          const categories = await getCategories();
-
-          return { categories, course: null };
+          try {
+            const categories = await getCategories();
+            return { categories, course: null };
+          } catch (error) {
+            toast.error(
+              error?.response?.data?.message || "Gagal memuat kategori"
+            );
+            throw redirect("/manager/courses");
+          }
         },
         element: <ManageCreateCoursePage />,
       },
       {
         path: "/manager/courses/edit/:id",
         loader: async ({ params }) => {
-          const categories = await getCategories();
-          const course = await getCourseDetail(params.id);
-
-          return { categories, course: course?.data };
+          try {
+            const categories = await getCategories();
+            const course = await getCourseDetail(params.id);
+            return { categories, course: course?.data };
+          } catch (error) {
+            toast.error(
+              error?.response?.data?.message || "Gagal memuat course"
+            );
+            throw redirect("/manager/courses");
+          }
         },
         element: <ManageCreateCoursePage />,
       },
       {
         path: "/manager/courses/:id",
         loader: async ({ params }) => {
-          const course = await getCourseDetail(params.id);
-
-          return course?.data;
+          try {
+            const course = await getCourseDetail(params.id);
+            return course?.data;
+          } catch (error) {
+            toast.error(
+              error?.response?.data?.message || "Course tidak ditemukan"
+            );
+            throw redirect("/manager/courses");
+          }
         },
         element: <ManageCourseDetailPage />,
       },
@@ -102,14 +123,31 @@ const router = createBrowserRouter([
       {
         path: "/manager/courses/:id/edit/:contentId",
         loader: async ({ params }) => {
-          const content = await getDetailContent(params.contentId);
-
-          return content?.data;
+          try {
+            const content = await getDetailContent(params.contentId);
+            return content?.data;
+          } catch (error) {
+            toast.error(
+              error?.response?.data?.message || "Content tidak ditemukan"
+            );
+            throw redirect(`/manager/courses/${params.id}`);
+          }
         },
         element: <ManageContentCreatePage />,
       },
       {
         path: "/manager/courses/:id/preview",
+        loader: async ({ params }) => {
+          try {
+            const course = await getCourseDetail(params.id, true);
+            return course?.data;
+          } catch (error) {
+            toast.error(
+              error?.response?.data?.message || "Gagal memuat preview course"
+            );
+            throw redirect("/manager/courses");
+          }
+        },
         element: <ManageCoursePreviewPage />,
       },
       {

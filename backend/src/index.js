@@ -9,13 +9,13 @@ import connectDB from "./utils/database.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 
-const app = express();
-
 dotenv.config();
+
+const app = express();
 
 connectDB();
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -30,6 +30,4 @@ app.use("/api", authRoutes);
 app.use("/api", paymentRoutes);
 app.use("/api", courseRoutes);
 
-app.listen(port, () => {
-  console.log("Express App listening on port 3000");
-});
+app.listen(port);
