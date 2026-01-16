@@ -180,6 +180,7 @@ export default function ManageContentCreatePage() {
             <label className="font-semibold">Content Text</label>
             <CKEditor
               editor={ClassicEditor}
+              data={content?.text}
               onChange={(_, editor) => {
                 setValue("text", editor.getData(), { shouldValidate: true });
               }}
