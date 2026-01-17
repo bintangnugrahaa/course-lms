@@ -1,6 +1,8 @@
 import userModel from "../models/userModel.js";
+import courseModel from "../models/courseModel.js";
 import bcrypt from "bcrypt";
 import fs from "fs";
+import path from "path";
 import { mutateStudentSchema } from "../utils/schema.js";
 
 const serverError = (res) =>
@@ -107,6 +109,47 @@ export const updateStudent = async (req, res) => {
 
     return res.json({
       message: "Update student success",
+    });
+  } catch {
+    return serverError(res);
+  }
+};
+
+export const deleteStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const student = await userModel.findById(id);
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found",
+      });
+    }
+
+    await courseModel.updateMany(
+      { students: id },
+      {
+        $pull: { students: id },
+      }
+    );
+
+    if (student.photo) {
+      const filePath = path.join(
+        path.resolve(),
+        "public/uploads/students",
+        student.photo
+      );
+
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
+    await userModel.findByIdAndDelete(id);
+
+    return res.json({
+      message: "Delete student success",
     });
   } catch {
     return serverError(res);
