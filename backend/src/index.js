@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import connectDB from "./utils/database.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
+import studentRoutes from "./routes/studentRoutes.js";
 
 dotenv.config();
 
@@ -29,5 +30,6 @@ app.use("/api", globalRoutes);
 app.use("/api", authRoutes);
 app.use("/api", paymentRoutes);
 app.use("/api", courseRoutes);
+app.use("/api", studentRoutes);
 
 app.listen(port);
