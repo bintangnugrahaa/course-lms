@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import Proptypes from "prop-types";
 
 export default function StudentItem(
-  id = "1",
-  imageUrl = "/assets/images/photos/photo-3.png",
-  name = "Michelle Alexandra",
-  totalCourse = 183
+  {
+    id = "1",
+    imageUrl = "/assets/images/photos/photo-3.png",
+    name = "Michelle Alexandra",
+    totalCourse = 183 }
 ) {
   return (
     <div className="card flex items-center gap-5">

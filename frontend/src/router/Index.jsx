@@ -21,6 +21,7 @@ import {
 } from "../services/courseService";
 import { toast } from "react-toastify";
 import ManagerStudentCreatePage from "../pages/manager/students-create/Index";
+import { getStudents } from "../services/studentService";
 
 const router = createBrowserRouter([
   {
@@ -153,6 +154,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/manager/students",
+        loader: async () => {
+          const students = await getStudents()
+
+          return students?.data;
+        },
         element: <ManageStudensPage />,
       },
       {
