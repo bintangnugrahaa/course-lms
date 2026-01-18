@@ -1,27 +1,37 @@
 import React from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLoaderData, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createStudentSchema } from "../../../utils/zodSchema"
+import { createStudentSchema, updateStudentSchema } from "../../../utils/zodSchema"
 import { useState } from "react"
 import { useRef } from 'react'
 import { useMutation } from "react-query"
-import { createStudent } from "../../../services/studentService"
+import { createStudent, updateStudent } from "../../../services/studentService"
 
-export default function ManagerStudentCreatePage() {
+export default function ManageStudentCreatePage() {
+    const student = useLoaderData()
+
     const {
         register,
         handleSubmit,
         formState: { errors },
         setValue,
     } = useForm({
-        resolver: zodResolver(createStudentSchema),
+        resolver: zodResolver(student === undefined ? createStudentSchema : updateStudentSchema),
+        defaultValues: {
+            name: student?.name,
+            email: student?.email,
+        }
     })
 
     const navigate = useNavigate()
 
-    const { isLoading, mutateAsync } = useMutation({
+    const mutateCreate = useMutation({
         mutationFn: (data) => createStudent(data),
+    })
+
+    const mutateUpdate = useMutation({
+        mutationFn: (data) => updateStudent(data, student?._id)
     })
 
     const [file, setFile] = useState(null)
@@ -31,12 +41,16 @@ export default function ManagerStudentCreatePage() {
         try {
             const formData = new FormData()
 
-            formData.append("avatar", values.photo)
+            formData.append("avatar", file);
             formData.append("name", values.name)
             formData.append("email", values.email)
             formData.append("password", values.password)
 
-            await mutateAsync(formData)
+            if (student === undefined) {
+                await mutateCreate.mutateAsync(formData)
+            } else {
+                await mutateUpdate.mutateAsync(formData)
+            }
 
             navigate("/manager/students")
         } catch (error) {
@@ -49,7 +63,7 @@ export default function ManagerStudentCreatePage() {
             <header className="flex items-center justify-between gap-[30px]">
                 <div>
                     <h1 className="font-extrabold text-[28px] leading-[42px]">
-                        Add Student
+                        {student === undefined ? 'Add' : 'Edit'} Student
                     </h1>
                     <p className="text-[#838C9D] mt-[1]">
                         Create new future for company
@@ -71,7 +85,7 @@ export default function ManagerStudentCreatePage() {
             >
                 <div className="relative flex flex-col gap-[10px]">
                     <label htmlFor="thumbnail" className="font-semibold">
-                        Add a Avatar
+                        {student === undefined ? 'Add' : 'Edit'} a Avatar
                     </label>
                     <div className="flex items-center gap-[14px]">
                         <div className="relative flex shrink-0 w-20 h-20 rounded-[20px] border border-[#CFDBEF] overflow-hidden">
@@ -203,10 +217,10 @@ export default function ManagerStudentCreatePage() {
                     </button>
                     <button
                         type="submit"
-                        disabled={isLoading}
+                        disabled={student === null ? mutateCreate.isLoading : mutateUpdate.isLoading}
                         className="w-full rounded-full p-[14px_20px] font-semibold text-white bg-[#662FFF] text-nowrap"
                     >
-                        Add Now
+                        {student === undefined ? 'Add' : 'Edit'} Now
                     </button>
                 </div>
             </form>

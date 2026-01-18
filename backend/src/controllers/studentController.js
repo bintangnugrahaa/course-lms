@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import fs from "fs";
 import path from "path";
 import { mutateStudentSchema } from "../utils/schema.js";
+import mongoose from "mongoose";
 
 const serverError = (res) =>
   res.status(500).json({ message: "Internal server error" });
@@ -29,6 +30,36 @@ export const getStudents = async (req, res) => {
       data: response,
     });
   } catch {
+    return serverError(res);
+  }
+};
+
+export const getStudentById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        message: "Invalid student id",
+      });
+    }
+
+    const student = await userModel
+      .findById(id)
+      .select("name email");
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found",
+      });
+    }
+
+    return res.json({
+      message: "Get detail student success",
+      data: student,
+    });
+  } catch (error) {
+    console.error(error);
     return serverError(res);
   }
 };

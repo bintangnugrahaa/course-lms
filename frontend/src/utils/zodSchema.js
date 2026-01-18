@@ -62,7 +62,7 @@ export const mutateContentSchema = z
     }
   });
 
-  export const createStudentSchema = z.object({
+export const createStudentSchema = z.object({
   name: z.string().min(5, { message: "Minimum 5 characters." }),
   email: z.string().email({ message: "Invalid email." }),
   password: z.string().min(8, { message: "Minimum 8 characters." }),
@@ -74,4 +74,9 @@ export const mutateContentSchema = z
     .refine((file) => file.size <= MAX_FILE_SIZE, {
       message: "File size exceeds 2MB.",
     }),
+});
+
+export const updateStudentSchema = createStudentSchema.omit({
+  password: true,
+  photo: true,
 });
