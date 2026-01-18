@@ -20,6 +20,7 @@ import {
   getDetailContent,
 } from "../services/courseService";
 import { toast } from "react-toastify";
+import ManagerStudentCreatePage from "../pages/manager/students-create/Index";
 
 const router = createBrowserRouter([
   {
@@ -154,6 +155,10 @@ const router = createBrowserRouter([
         path: "/manager/students",
         element: <ManageStudensPage />,
       },
+      {
+        path: "/manager/students/create",
+        element: <ManagerStudentCreatePage />,
+      }
     ],
   },
   {
