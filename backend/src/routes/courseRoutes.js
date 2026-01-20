@@ -2,6 +2,7 @@ import express from "express";
 import {
   deleteContentCourse,
   deleteCourse,
+  deleteStudentToCourse,
   getCategories,
   getCourseById,
   getCourses,
@@ -60,5 +61,6 @@ courseRoutes.get("/courses/contents/:id", verifyToken, getDetailContent);
 
 courseRoutes.get('/courses/students/:id', verifyToken, getStudentsByCourseId)
 courseRoutes.post('/courses/students/:id', verifyToken, validateRequest(addStudentCourseSchema), postStudentToCourse)
+courseRoutes.put('/courses/students/:id', verifyToken, validateRequest(addStudentCourseSchema), deleteStudentToCourse)
 
 export default courseRoutes;
