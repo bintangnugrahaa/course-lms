@@ -32,3 +32,7 @@ export const mutateStudentSchema = z.object({
   email: z.string().email({ message: "Invalid email." }),
   password: z.string().min(8, { message: "Minimum 8 characters." }),
 });
+
+export const addStudentCourseSchema = z.object({
+  studentId: z.string().min(5)
+})
