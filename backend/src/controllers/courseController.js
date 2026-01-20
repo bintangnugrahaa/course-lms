@@ -264,3 +264,27 @@ export const getDetailContent = async (req, res) => {
     return serverError(res);
   }
 };
+
+export const getStudentsByCourseId = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const course = await courseModel
+      .findById(id)
+      .select('name')
+      .populate({
+        path: 'students',
+        select: 'name email photo'
+      })
+
+    return res.json({
+      message: 'Get student by course success',
+      data: course
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      message: 'Internal server error'
+    })
+  }
+}
