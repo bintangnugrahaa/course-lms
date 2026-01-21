@@ -1,64 +1,31 @@
 import React from "react";
-import { Link, useRevalidator } from "react-router-dom";
+import { useParams, useRevalidator } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useMutation } from "react-query";
-import { deleteStudent } from "../../../services/studentService";
-import { toast } from "react-toastify";
+import { deleteStudentCourse } from "../../../services/courseService";
 
 export default function StudentItem({
     id = "1",
     imageUrl = "/assets/images/photos/photo-3.png",
     name = "Michelle Alexandra",
 }) {
-    const revalidator = useRevalidator();
+    const revalidator = useRevalidator()
 
-    const { isLoading, mutate } = useMutation({
-        mutationFn: () => deleteStudent(id),
-        onSuccess: () => {
-            toast.success("Student berhasil dihapus");
-            revalidator.revalidate();
-        },
-        onError: (error) => {
-            toast.error(
-                error?.response?.data?.message || "Gagal menghapus student"
-            );
-        },
-    });
+    const params = useParams()
 
-    const handleDeleteConfirm = () => {
-        toast(
-            ({ closeToast }) => (
-                <div>
-                    <p className="font-semibold mb-3">
-                        Yakin ingin menghapus student ini?
-                    </p>
-                    <div className="flex justify-end gap-3">
-                        <button
-                            onClick={() => {
-                                mutate();
-                                closeToast();
-                            }}
-                            className="px-4 py-2 bg-red-500 text-white rounded-md"
-                        >
-                            Yes, Delete
-                        </button>
-                        <button
-                            onClick={closeToast}
-                            className="px-4 py-2 bg-gray-300 rounded-md"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            ),
-            {
-                position: "top-center",
-                autoClose: false,
-                closeOnClick: false,
-                closeButton: false,
-            }
-        );
-    };
+    const { isLoading, mutateAsync } = useMutation({
+        mutationFn: () => deleteStudentCourse({ studentId: id }, params.id)
+    })
+
+    const handleDelete = async () => {
+        try {
+            await mutateAsync()
+
+            revalidator.revalidate()
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <div className="card flex items-center gap-5">
@@ -71,27 +38,19 @@ export default function StudentItem({
                     />
                 </div>
             </div>
-
             <div className="w-full">
                 <h3 className="font-bold text-xl leading-[30px] line-clamp-1">
                     {name}
                 </h3>
             </div>
-
             <div className="flex justify-end items-center gap-3">
-                <Link
-                    to={`/manager/students/edit/${id}`}
-                    className="w-fit rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap"
-                >
-                    Edit Profile
-                </Link>
                 <button
-                    // onClick={handleDeleteConfirm}
-                    // disabled={isLoading}
                     type="button"
+                    disabled={isLoading}
+                    onClick={handleDelete}
                     className="w-fit rounded-full p-[14px_20px] bg-[#FF435A] font-semibold text-white text-nowrap"
                 >
-                    {isLoading ? "Deleting..." : "Delete"}
+                    Delete
                 </button>
             </div>
         </div>
