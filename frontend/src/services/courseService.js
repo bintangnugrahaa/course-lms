@@ -30,3 +30,6 @@ export const deleteDetailContent = (id) =>
 
 export const getStudentsCourse = async (id) =>
   apiInstanceAuth.get(`/courses/students/${id}`).then(res => res.data)
+
+export const addStudentsCourse = async (data, id) =>
+  apiInstanceAuth.post(`/courses/students/${id}`, data).then(res => res.data)

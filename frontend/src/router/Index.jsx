@@ -1,18 +1,28 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
+import secureLocalStorage from "react-secure-storage";
+import { toast } from "react-toastify";
+
+import LayoutDashboard from "../components/Layout";
+import { MANAGER_SESSION, STORAGE_KEY } from "../utils/const";
+
 import ManagerHomePage from "../pages/manager/Home/Index";
 import SignInPage from "../pages/sign-in/Index";
 import SignUpPage from "../pages/sign-up/Index";
 import SuccessCheckoutPage from "../pages/success-checkout/Index";
-import LayoutDashboard from "../components/Layout";
+
 import ManageCoursePage from "../pages/manager/courses/Index";
 import ManageCreateCoursePage from "../pages/manager/create-courses/Index";
 import ManageCourseDetailPage from "../pages/manager/course-detail/Index";
 import ManageContentCreatePage from "../pages/manager/course-content-create/Index";
 import ManageCoursePreviewPage from "../pages/manager/course-preview/Index";
+
 import ManageStudensPage from "../pages/manager/students/Index";
+import ManageStudentCreatePage from "../pages/manager/students-create/Index";
+import StudentCourseList from "../pages/manager/student-course/Index";
+import StudentForm from "../pages/manager/student-course/studentForm";
+
 import StudentPage from "../pages/student/student-overview/Index";
-import { MANAGER_SESSION, STORAGE_KEY } from "../utils/const";
-import secureLocalStorage from "react-secure-storage";
+
 import {
   getCategories,
   getCourseDetail,
@@ -20,10 +30,7 @@ import {
   getDetailContent,
   getStudentsCourse,
 } from "../services/courseService";
-import { toast } from "react-toastify";
-import ManageStudentCreatePage from "../pages/manager/students-create/Index";
 import { getDetailStudent, getStudents } from "../services/studentService";
-import StudentCourseList from "../pages/manager/student-course-list/Index";
 
 const router = createBrowserRouter([
   {
@@ -47,11 +54,9 @@ const router = createBrowserRouter([
     id: MANAGER_SESSION,
     loader: async () => {
       const session = secureLocalStorage.getItem(STORAGE_KEY);
-
       if (!session || session.role !== "manager") {
         throw redirect("/manager/sign-in");
       }
-
       return session;
     },
     element: <LayoutDashboard />,
@@ -61,130 +66,98 @@ const router = createBrowserRouter([
         element: <ManagerHomePage />,
       },
       {
-        path: "/manager/courses",
+        path: "courses",
         loader: async () => {
           try {
             return await getCourses();
-          } catch (error) {
-            toast.error(
-              error?.response?.data?.message || "Gagal memuat daftar course"
-            );
+          } catch {
+            toast.error("Gagal memuat daftar course");
             return [];
           }
         },
         element: <ManageCoursePage />,
       },
       {
-        path: "/manager/courses/create",
+        path: "courses/create",
         loader: async () => {
-          try {
-            const categories = await getCategories();
-            return { categories, course: null };
-          } catch (error) {
-            toast.error(
-              error?.response?.data?.message || "Gagal memuat kategori"
-            );
-            throw redirect("/manager/courses");
-          }
+          const categories = await getCategories();
+          return { categories, course: null };
         },
         element: <ManageCreateCoursePage />,
       },
       {
-        path: "/manager/courses/edit/:id",
+        path: "courses/edit/:id",
         loader: async ({ params }) => {
-          try {
-            const categories = await getCategories();
-            const course = await getCourseDetail(params.id);
-            return { categories, course: course?.data };
-          } catch (error) {
-            toast.error(
-              error?.response?.data?.message || "Gagal memuat course"
-            );
-            throw redirect("/manager/courses");
-          }
+          const categories = await getCategories();
+          const course = await getCourseDetail(params.id);
+          return { categories, course: course?.data };
         },
         element: <ManageCreateCoursePage />,
       },
       {
-        path: "/manager/courses/:id",
+        path: "courses/:id",
         loader: async ({ params }) => {
-          try {
-            const course = await getCourseDetail(params.id);
-            return course?.data;
-          } catch (error) {
-            toast.error(
-              error?.response?.data?.message || "Course tidak ditemukan"
-            );
-            throw redirect("/manager/courses");
-          }
+          const course = await getCourseDetail(params.id);
+          return course?.data;
         },
         element: <ManageCourseDetailPage />,
       },
       {
-        path: "/manager/courses/:id/create",
+        path: "courses/:id/create",
         element: <ManageContentCreatePage />,
       },
       {
-        path: "/manager/courses/:id/edit/:contentId",
+        path: "courses/:id/edit/:contentId",
         loader: async ({ params }) => {
-          try {
-            const content = await getDetailContent(params.contentId);
-            return content?.data;
-          } catch (error) {
-            toast.error(
-              error?.response?.data?.message || "Content tidak ditemukan"
-            );
-            throw redirect(`/manager/courses/${params.id}`);
-          }
+          const content = await getDetailContent(params.contentId);
+          return content?.data;
         },
         element: <ManageContentCreatePage />,
       },
       {
-        path: "/manager/courses/:id/preview",
+        path: "courses/:id/preview",
         loader: async ({ params }) => {
-          try {
-            const course = await getCourseDetail(params.id, true);
-            return course?.data;
-          } catch (error) {
-            toast.error(
-              error?.response?.data?.message || "Gagal memuat preview course"
-            );
-            throw redirect("/manager/courses");
-          }
+          const course = await getCourseDetail(params.id, true);
+          return course?.data;
         },
         element: <ManageCoursePreviewPage />,
       },
       {
-        path: "/manager/students",
+        path: "students",
         loader: async () => {
-          const students = await getStudents()
-
+          const students = await getStudents();
           return students?.data;
         },
         element: <ManageStudensPage />,
       },
       {
-        path: "/manager/students/create",
+        path: "students/create",
         element: <ManageStudentCreatePage />,
       },
       {
-        path: '/manager/students/edit/:id',
+        path: "students/edit/:id",
         loader: async ({ params }) => {
-          const student = await getDetailStudent(params.id)
-
-          return student?.data
+          const student = await getDetailStudent(params.id);
+          return student?.data;
         },
-        element: <ManageStudentCreatePage />
+        element: <ManageStudentCreatePage />,
       },
       {
-        path: '/manager/courses/students/:id',
+        path: "courses/students/:id",
         loader: async ({ params }) => {
-          const course = await getStudentsCourse(params.id)
-
-          return course?.data
+          const course = await getStudentsCourse(params.id);
+          return course?.data;
         },
-        element: <StudentCourseList />
-      }
+        element: <StudentCourseList />,
+      },
+      {
+        path: "courses/students/:id/add",
+        loader: async () => {
+          const students = await getStudents();
+          return students?.data;
+        },
+        element: <StudentForm />,
+      },
     ],
   },
   {
@@ -196,7 +169,7 @@ const router = createBrowserRouter([
         element: <StudentPage />,
       },
       {
-        path: "/student/detail-course/:id",
+        path: "detail-course/:id",
         element: <ManageCoursePreviewPage />,
       },
     ],
