@@ -9,7 +9,7 @@ export default function StudentItem({
   id = "1",
   imageUrl = "/assets/images/photos/photo-3.png",
   name = "Michelle Alexandra",
-  totalCourse = 183,
+  totalCourse = 0,
 }) {
   const revalidator = useRevalidator();
 

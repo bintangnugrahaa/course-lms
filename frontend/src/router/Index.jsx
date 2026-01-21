@@ -18,10 +18,12 @@ import {
   getCourseDetail,
   getCourses,
   getDetailContent,
+  getStudentsCourse,
 } from "../services/courseService";
 import { toast } from "react-toastify";
 import ManageStudentCreatePage from "../pages/manager/students-create/Index";
 import { getDetailStudent, getStudents } from "../services/studentService";
+import StudentCourseList from "../pages/manager/student-course-list/Index";
 
 const router = createBrowserRouter([
   {
@@ -173,6 +175,15 @@ const router = createBrowserRouter([
           return student?.data
         },
         element: <ManageStudentCreatePage />
+      },
+      {
+        path: '/manager/courses/students/:id',
+        loader: async ({ params }) => {
+          const course = await getStudentsCourse(params.id)
+
+          return course?.data
+        },
+        element: <StudentCourseList />
       }
     ],
   },
