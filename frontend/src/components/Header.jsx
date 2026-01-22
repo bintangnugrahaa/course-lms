@@ -1,9 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { STORAGE_KEY } from "../utils/const";
+import { Link, useRouteLoaderData } from "react-router-dom";
+import { MANAGER_SESSION, STORAGE_KEY } from "../utils/const";
 import secureLocalStorage from "react-secure-storage";
 
 export default function Header() {
+  const session = useRouteLoaderData(MANAGER_SESSION)
+  console.log(session)
+
   const handleLogout = () => {
     secureLocalStorage.removeItem(STORAGE_KEY);
 
@@ -31,8 +34,8 @@ export default function Header() {
       </form>
       <div className="relative flex items-center justify-end gap-[14px] group">
         <div className="text-right">
-          <p className="font-semibold">Kim Jennie</p>
-          <p className="text-sm leading-[21px] text-[#838C9D]">Manager</p>
+          <p className="font-semibold">{session.name}</p>
+          <p className="text-sm leading-[21px] text-[#838C9D]">{session?.role}</p>
         </div>
         <button
           type="button"

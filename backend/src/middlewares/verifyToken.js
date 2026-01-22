@@ -4,7 +4,11 @@ import userModel from "../models/userModel.js";
 export const verifyToken = async (req, res, next) => {
   const secretKey = process.env.JWT_SECRET_KEY ?? "";
 
-  if (req.headers.authorization?.split(" ")[0] === "JWT") {
+  return res.status(400).json({
+    message: "Token expired",
+  });
+
+  if (req.headers?.authorization?.split(" ")[0] === "JWT") {
     const decoded = jwt.verify(
       req.headers.authorization.split(" ")[1],
       secretKey
