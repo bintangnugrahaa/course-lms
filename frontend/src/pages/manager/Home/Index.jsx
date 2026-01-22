@@ -1,9 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import Course from "./Course";
-import Student from "./Student";
+import { Link, useLoaderData } from "react-router-dom";
+import Courses from "./Course";
+import Students from "./Student";
 
 export default function ManagerHomePage() {
+  const overview = useLoaderData()
+
   return (
     <>
       <header className="flex items-center justify-between gap-[30px]">
@@ -40,7 +42,7 @@ export default function ManagerHomePage() {
               alt="icon"
             />
             <div>
-              <p className="font-extrabold text-2xl leading-[36px]">189,498</p>
+              <p className="font-extrabold text-2xl leading-[36px]">{overview?.totalStudents}</p>
               <p className="text-[#838C9D]">Total Students</p>
             </div>
           </div>
@@ -51,7 +53,7 @@ export default function ManagerHomePage() {
               alt="icon"
             />
             <div>
-              <p className="font-extrabold text-2xl leading-[36px]">7,221</p>
+              <p className="font-extrabold text-2xl leading-[36px]">{overview?.totalCourses}</p>
               <p className="text-[#838C9D]">Total Courses</p>
             </div>
           </div>
@@ -62,7 +64,7 @@ export default function ManagerHomePage() {
               alt="icon"
             />
             <div>
-              <p className="font-extrabold text-2xl leading-[36px]">893,891</p>
+              <p className="font-extrabold text-2xl leading-[36px]">{overview?.totalVideos}</p>
               <p className="text-[#838C9D]">Video Content</p>
             </div>
           </div>
@@ -73,7 +75,7 @@ export default function ManagerHomePage() {
               alt="icon"
             />
             <div>
-              <p className="font-extrabold text-2xl leading-[36px]">12,812</p>
+              <p className="font-extrabold text-2xl leading-[36px]">{overview?.totalTexts}</p>
               <p className="text-[#838C9D]">Text Content</p>
             </div>
           </div>
@@ -111,8 +113,8 @@ export default function ManagerHomePage() {
         </div>
       </section>
       <div className="grid grid-cols-2 gap-[30px]">
-        <Course />
-        <Student />
+        <Courses />
+        <Students />
       </div>
     </>
   )

@@ -83,7 +83,7 @@ export const getOverviews = async (req, res) => {
 
         const photoUrl = process.env.APP_URL + '/uploads/students/'
 
-        const responseStudents = coursesList.map((item) => {
+        const responseStudents = students.map((item) => {
             return {
                 ...item.toObject(),
                 photo_url: photoUrl + item.photo

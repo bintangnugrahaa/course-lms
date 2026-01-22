@@ -31,6 +31,7 @@ import {
   getStudentsCourse,
 } from "../services/courseService";
 import { getDetailStudent, getStudents } from "../services/studentService";
+import { getOverviews } from "../services/overviewService";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        loader: async () => {
+          const overviews = await getOverviews()
+
+          return overviews?.data
+        },
         element: <ManagerHomePage />,
       },
       {
