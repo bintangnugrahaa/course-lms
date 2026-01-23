@@ -1,44 +1,27 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend service for Learning Management System (LMS).",
-  "keywords": [
-    "lms",
-    "fullstack",
-    "backend",
-    "express",
-    "mongodb",
-    "jwt",
-    "api"
-  ],
-  "homepage": "https://github.com/bintangnugrahaa/course-lms#readme",
-  "bugs": {
-    "url": "https://github.com/bintangnugrahaa/course-lms/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bintangnugrahaa/course-lms.git"
-  },
-  "license": "ISC",
-  "author": "Muhammad Bintang Nugraha",
+  "description": "",
+  "main": "index.js",
   "type": "module",
-  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"No tests specified\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js"
   },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "bcrypt": "^6.0.0",
-    "body-parser": "^2.2.1",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.1.1",
-    "multer": "^2.0.2",
-    "zod": "^4.3.4"
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.2",
+    "multer": "^1.4.5-lts.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.4"
   }
 }
